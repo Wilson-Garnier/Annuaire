@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApplication1.Classes
 {
-    class Classes
+    class ContactClass
     {
         // Ici je vais créer les Get et les SET
-       public int Identifiant { get; set; }
-        public string  Nom { get; set; }
+        public int Identifiant { get; set; }
+        public string Nom { get; set; }
         public string Prenom { get; set; }
         public string Numero { get; set; }
         public string Adresse { get; set; }
@@ -30,12 +30,12 @@ namespace WindowsFormsApplication1.Classes
             try
             {
                 string sql = "SELECT * FROM Employe";
-                SqlCommand cmd = new SqlConnection(sql, conn);
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+              //SqlCommand cmd = new SqlCommand(sql, cmd);
+              //SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 conn.Open();
-                adapter.Fill(dt);
+               //dapter.Fill(dt);
             }
-            catch(Exeption ex)
+            catch (Exeption)
             {
 
             }
@@ -48,7 +48,7 @@ namespace WindowsFormsApplication1.Classes
 
         //Insertion des données
 
-        public bool Insert (Classes c)
+        public bool Insert(ContactClass c)
         {
             //Création du type par défault des données  ( Vrai ou faux )
             bool isSuccess = false;
@@ -58,7 +58,7 @@ namespace WindowsFormsApplication1.Classes
             try
             {
                 // On va créer la requete qui nous permet d'inserer des donnée dans la base de données .
-                string sql = "INSERT INTO Employe (Nom,Prenom,Numero,Adresse,Genre) VALUES(@Nom,@Prenom,@Numero,@Adresse,@Genre) ";
+                string sql = "INSERT INTO Employe (Nom,Prenom,Numero,Adresse) VALUES(@Nom,@Prenom,@Numero,@Adresse) ";
 
                 //Création d'une commande SQL
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -68,7 +68,6 @@ namespace WindowsFormsApplication1.Classes
                 cmd.Parameters.AddWithValue("@Prenom", c.Prenom);
                 cmd.Parameters.AddWithValue("@Numero", c.Numero);
                 cmd.Parameters.AddWithValue("@Adresse", c.Adresse);
-                cmd.Parameters.AddWithValue("@Genre", c.Genre);
 
                 //On ouvre la connection 
 
@@ -76,15 +75,15 @@ namespace WindowsFormsApplication1.Classes
                 int rows = cmd.ExecuteNonQuery();
                 if (rows > 0)
                 {
-                    isSuccess = true ;
+                    isSuccess = true;
                 }
                 else
                 {
                     isSuccess = false;
                 }
-                
+
             }
-            catch(Exeption ex)
+            catch (Exeption)
             {
 
             }
@@ -97,7 +96,7 @@ namespace WindowsFormsApplication1.Classes
         }
         //Création de la méthode pour Modifier les donnée de la base de données . 
 
-        public bool Update(Classes c)
+        public bool Update(ContactClass c)
         {
             //Création de la valeur par défault (Vrai ou Faux ) 
             bool isSuccess = false;
@@ -105,7 +104,7 @@ namespace WindowsFormsApplication1.Classes
             try
             {
                 //On va créer la requete qui permet de modifier les élement de la base 
-                string sql = "UPDATE Employe SET Nom=@Nom,Prenom=@Prenom,Numero=@Numero,Adresse=@Adresse,Genre=@Genre WHERE Identifiant=@Identifiant";
+                string sql = "UPDATE Employe SET Nom=@Nom,Prenom=@Prenom,Numero=@Numero,Adresse=@Adresse WHERE Identifiant=@Identifiant";
 
                 //Création de la SQL Commande 
 
@@ -115,8 +114,8 @@ namespace WindowsFormsApplication1.Classes
                 cmd.Parameters.AddWithValue("@Prenom", c.Prenom);
                 cmd.Parameters.AddWithValue("@Numero", c.Numero);
                 cmd.Parameters.AddWithValue("@Adresse", c.Adresse);
-                cmd.Parameters.AddWithValue("@Genre", c.Genre);
-                cmd.Parameters.AddWithValue("@ID", c.Identifiant);
+               
+                cmd.Parameters.AddWithValue("@Identifiant", c.Identifiant);
 
                 // On ouvre la connection avec la base de données
                 conn.Open();
@@ -133,12 +132,55 @@ namespace WindowsFormsApplication1.Classes
 
 
             }
-            catch (Exeption ex)
+            catch (Exeption)
             {
 
             }
             finally
             {
+                conn.Close();
+            }
+            return isSuccess;
+        }
+
+        //On va créer maintenant la méthode qui permet de supprimer 
+
+        public bool Delete(ContactClass  c)
+        {
+            bool isSuccess = false;
+            //On créer la connection 
+            SqlConnection conn = new SqlConnection(myconnstrng);
+            try
+            {
+                //On créer la requete qui permet de supprimer
+
+                string sql = "DELETE FROM Employe WHERE Identifiant=@Identifiant";
+
+                //On créer la commande SQL
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Identifiant", c.Identifiant);
+                //On ouvre la connection 
+                conn.Open();
+
+                int rows = cmd.ExecuteNonQuery();
+
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
+
+            }
+            catch (Exeption )
+            {
+
+            }
+            finally
+            {
+                //On ferme la connection
                 conn.Close();
             }
             return isSuccess;

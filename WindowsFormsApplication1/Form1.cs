@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApplication1.Classes;
 
 namespace WindowsFormsApplication1
 {
@@ -16,6 +17,8 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
         }
+        ContactClass c = new ContactClass();
+      
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
@@ -51,5 +54,38 @@ namespace WindowsFormsApplication1
         {
 
         }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            c.Nom = textboxNom.Text;
+            c.Prenom = textboxPrenom.Text;
+            c.Numero = textboxTel.Text;
+            c.Adresse = textboxAdresse.Text;
+
+
+
+
+
+            //INSERTION DES DONNES
+            bool success = c.Insert(c);
+            if (success == true)
+            {
+                MessageBox.Show("Le nouveau contact à bien été rajouter");
+            }
+            else
+            {
+                MessageBox.Show("Un problème est survenu lors de l'insertion . Veuillez Réessayer");
+            }
+
+          
+        
+
+
+            ;
+
+        }
     }
-}
+
+      
+    }
+
